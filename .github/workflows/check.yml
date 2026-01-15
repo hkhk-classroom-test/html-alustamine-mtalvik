@@ -1,0 +1,24 @@
+name: HTML Check
+on: [push]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check index.html exists
+        run: |
+          if [ ! -f index.html ]; then
+            echo "❌ index.html puudub!"
+            exit 1
+          fi
+          echo "✅ index.html olemas"
+      
+      - name: Check for h1 tag
+        run: |
+          if ! grep -q "<h1>" index.html; then
+            echo "❌ <h1> tag puudub!"
+            exit 1
+          fi
+          echo "✅ <h1> tag olemas"
