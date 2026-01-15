@@ -1,0 +1,30 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Check h1 tag
+      id: check-h1-tag
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Check h1 tag
+        setup-command: ''
+        command: grep -q "<h1>" index.html
+        timeout: 1
+        max-score: 10
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        CHECK-H1-TAG_RESULTS: "${{steps.check-h1-tag.outputs.result}}"
+      with:
+        runners: check-h1-tag
